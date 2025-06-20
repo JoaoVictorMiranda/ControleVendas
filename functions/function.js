@@ -2,6 +2,7 @@ import prompt from 'prompt-sync';
 import chalk from 'chalk'
 const input = prompt();
 
+
 export function Perguntar(msg) {
     return Number(input(msg));
 };
@@ -19,7 +20,7 @@ export function Menu() {
         1. Registrar venda 
         2. Cancelar venda 
         3. Listar vendas do dia 
-        4. Listar vendas de um período
+        4. Listar Produtos em estoque
         0. Sair 
                 `)
 };
@@ -49,11 +50,14 @@ export function RegistrarVenda() {
     if (ProdutosEstoque[Produto].QtProduto <= 0) {
         console.log("Não ah mais deste produto em estoque...");
     } else {
+        const d = new Date();
         VendasTotais.push({
+            id: Produto,
             QtdVendida: 1,
             Produto: ProdutosEstoque[Produto].Nome,
             Preco: ProdutosEstoque[Produto].preco,
-            Cliente: input("Gostaria de informar o cliente?")
+            Cliente: input("Gostaria de informar o cliente?"),
+            Data: d
         }
         )
         ProdutosEstoque[Produto].QtProduto--;
@@ -69,20 +73,45 @@ export function RegistrarVenda() {
     input("Aperte para continuar...")
 }
 
+export function CancelarVenda() {
+    console.log(`          
+        ${chalk.bold('>> A Oficina Submersa de Elias Grimwald – Sussurros do Relicário de Vapor <<')}
+                ${chalk.bold.dim(GerarFrase())}
+                CANCELAR VENDA `);
+
+    ListarVendas();
+
+    if (VendasTotais.length <= 0) {
+        input("Aperte para voltar  ");
+    } else {
+        let venda = Number(input("Qual gostaria de cancelar? "));
+
+        // Verifica se a venda existe
+        if (venda >= 0 && venda < VendasTotais.length) {
+            let id = VendasTotais[venda].id;
+            VendasTotais.splice(venda, 1);
+            console.log("Venda cancelada com sucesso.");
+        } else {
+            console.log("Venda não encontrada.");
+        }
+
+        input("Aperte para continuar...");
+    }
+}
+
 
 export function ListarVendas() {
     if (VendasTotais.length <= 0) {
         ApagarTerminal();
         console.log("Não foram feitas vendas ainda hoje")
-        input("Aperte para voltar ao menu")
     } else {
         ApagarTerminal();
         let i = 0;
         for (let item of VendasTotais) {
-            console.log(`[${i}] 🔹 ${item.Produto} — Quantidade: ${item.QtdVendida}`);
+            console.log(`[${i}] 🔹 ${item.Produto} — Quantidade: ${item.QtdVendida} >> ${item.Data.toLocaleString()}`);
             i++;
         }
-        input("Aperte para Voltar ao MENU")
+
     }
 
 

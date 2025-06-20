@@ -1,4 +1,6 @@
 import * as funcao from './functions/function.js'
+import prompt from 'prompt-sync';
+const input = prompt();
 funcao.ApagarTerminal();
 let VerificarLoop = true;
 
@@ -24,9 +26,13 @@ while (VerificarLoop) {
         case 3:
             //LISTAR VENDAS DO DIA
             funcao.ListarVendas();
+            input("Aperte para Voltar ao MENU")
             break;
         case 4:
-            //LISTAR VENDAS DE UM PERIODO
+            //Listar Produtos em estoque4
+            funcao.ApagarTerminal();
+            funcao.ListarEstoqueResumido();
+            input("Aperte para voltar")
             break;
 
     }
