@@ -19,12 +19,14 @@ while (VerificarLoop) {
             break;
         case 2:
             //CANCELAR VENDA
+            funcao.CancelarVenda();
             break
         case 3:
             //LISTAR VENDAS DO DIA
+            funcao.ListarVendas();
             break;
         case 4:
-            //LISTAR VENDAS DO DIA
+            //LISTAR VENDAS DE UM PERIODO
             break;
 
     }
