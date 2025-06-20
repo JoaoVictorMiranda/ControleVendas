@@ -1,126 +1,8 @@
 import prompt from 'prompt-sync';
-import chalk from 'chalk'
+import chalk from 'chalk';
 const input = prompt();
 
-
-export function Perguntar(msg) {
-    return Number(input(msg));
-};
-
-export function ApagarTerminal() {
-    process.stdout.write(`\x1B[2J\x1B[0f`);
-};
-
-export function Menu() {
-    ApagarTerminal();
-    console.log(` 
-        ${chalk.bold('>> A Oficina Submersa de Elias Grimwald – Sussurros do Relicário de Vapor <<')}
-                ${chalk.bold.dim(GerarFrase())}
-        CONTROLE DE VENDAS
-        1. Registrar venda 
-        2. Cancelar venda 
-        3. Listar vendas do dia 
-        4. Listar Produtos em estoque
-        0. Sair 
-                `)
-};
-
-
-export function ListarEstoque() {
-    for (let item of ProdutosEstoque) {
-        console.log(item)
-    }
-}
-export function ListarEstoqueResumido() {
-    let i = 0;
-    for (let item of ProdutosEstoque) {
-        console.log(`[${i}] 🔹 ${item.Nome} — Quantidade: ${item.QtProduto}`);
-        i++;
-    }
-}
-
-export function RegistrarVenda() {
-    ApagarTerminal();
-    console.log(`          
-        ${chalk.bold('>> A Oficina Submersa de Elias Grimwald – Sussurros do Relicário de Vapor <<')}
-                ${chalk.bold.dim(GerarFrase())}
-                REGISTRAR VENDAS `);
-    ListarEstoqueResumido();
-    let Produto = Number(input("Qual foi vendido?  "));
-    if (ProdutosEstoque[Produto].QtProduto <= 0) {
-        console.log("Não ah mais deste produto em estoque...");
-    } else {
-        const d = new Date();
-        VendasTotais.push({
-            id: Produto,
-            QtdVendida: 1,
-            Produto: ProdutosEstoque[Produto].Nome,
-            Preco: ProdutosEstoque[Produto].preco,
-            Cliente: input("Gostaria de informar o cliente?"),
-            Data: d
-        }
-        )
-        ProdutosEstoque[Produto].QtProduto--;
-        console.log(` ${ProdutosEstoque[Produto].Nome}, VENDIDO `)
-        input("Aperte para continuar...")
-    }
-    ApagarTerminal();
-    if (ProdutosEstoque[Produto].QtProduto == 0) {
-        ProdutosEstoque.splice(Produto, 1);
-    }
-    console.log("ATUALIZADO")
-    ListarEstoqueResumido();
-    input("Aperte para continuar...")
-}
-
-export function CancelarVenda() {
-    console.log(`          
-        ${chalk.bold('>> A Oficina Submersa de Elias Grimwald – Sussurros do Relicário de Vapor <<')}
-                ${chalk.bold.dim(GerarFrase())}
-                CANCELAR VENDA `);
-
-    ListarVendas();
-
-    if (VendasTotais.length <= 0) {
-        input("Aperte para voltar  ");
-    } else {
-        let venda = Number(input("Qual gostaria de cancelar? "));
-
-        // Verifica se a venda existe
-        if (venda >= 0 && venda < VendasTotais.length) {
-            let id = VendasTotais[venda].id;
-            VendasTotais.splice(venda, 1);
-            console.log("Venda cancelada com sucesso.");
-        } else {
-            console.log("Venda não encontrada.");
-        }
-
-        input("Aperte para continuar...");
-    }
-}
-
-
-export function ListarVendas() {
-    if (VendasTotais.length <= 0) {
-        ApagarTerminal();
-        console.log("Não foram feitas vendas ainda hoje")
-    } else {
-        ApagarTerminal();
-        let i = 0;
-        for (let item of VendasTotais) {
-            console.log(`[${i}] 🔹 ${item.Produto} — Quantidade: ${item.QtdVendida} >> ${item.Data.toLocaleString()}`);
-            i++;
-        }
-
-    }
-
-
-}
-
-
-let VendasTotais = [
-]
-
+let VendasTotais = [];
 
 let ProdutosEstoque = [
     {
@@ -134,7 +16,8 @@ let ProdutosEstoque = [
         Categoria: "Raro",
         EstadoDeConservacao: "Estável",
         QtProduto: 2
-    }, {
+    },
+    {
         Nome: "Lente de Vislumbre Temporal",
         Descricao: "Permite ao autômato prever trajetórias mecânicas futuras com precisão absurda.",
         preco: 1280.00,
@@ -194,12 +77,7 @@ let ProdutosEstoque = [
         EstadoDeConservacao: "Intacto",
         QtProduto: 4
     }
-]
-
-export function GerarFrase() {
-    let math = Math.floor(Math.random() * Frases.length);
-    return Frases[math];
-}
+];
 
 let Frases = [
     "O Berço das Engrenagens onde tudo começou, antes mesmo da primeira faísca",
@@ -220,13 +98,133 @@ let Frases = [
     "O Poço das Engrenagens Esquecidas, lar das invenções que falharam em viver"
 ];
 
+export function GerarFrase() {
+    let math = Math.floor(Math.random() * Frases.length);
+    return Frases[math];
+}
 
+export function Perguntar(msg) {
+    return Number(input(msg));
+};
 
+export function ApagarTerminal() {
+    process.stdout.write(`\x1B[2J\x1B[0f`);
+};
+
+export function Menu() {
+    ApagarTerminal();
+    console.log(chalk.cyanBright(` 
+${chalk.bold('>> A Oficina Submersa de Elias Grimwald – Sussurros do Relicário de Vapor <<')}
+        ${chalk.gray.italic(GerarFrase())}
+
+${chalk.yellowBright('CONTROLE DE VENDAS')}
+${chalk.green('1.')} Registrar venda 
+${chalk.green('2.')} Cancelar venda 
+${chalk.green('3.')} Listar vendas do dia 
+${chalk.green('4.')} Listar Produtos em estoque
+${chalk.red('0.')} Sair 
+    `));
+};
+
+export function ListarEstoque() {
+    for (let item of ProdutosEstoque) {
+        console.log(item)
+    }
+}
+
+export function ListarEstoqueResumido() {
+    let i = 0;
+    for (let item of ProdutosEstoque) {
+        console.log(chalk.yellow(`[${i}] 🔹 ${item.Nome}`) + chalk.white(` — Quantidade: ${item.QtProduto}`));
+        i++;
+    }
+}
+
+export function RegistrarVenda() {
+    ApagarTerminal();
+    console.log(chalk.cyanBright(`          
+${chalk.bold('>> A Oficina Submersa de Elias Grimwald – Sussurros do Relicário de Vapor <<')}
+        ${chalk.gray.italic(GerarFrase())}
+        ${chalk.yellowBright('REGISTRAR VENDAS')}
+`));
+
+    ListarEstoqueResumido();
+    let Produto = Number(input("Qual foi vendido?  "));
+
+    if (ProdutosEstoque[Produto].QtProduto <= 0) {
+        console.log(chalk.red.bold("Não ah mais deste produto em estoque..."));
+    } else {
+        const d = new Date();
+        VendasTotais.push({
+            id: Produto,
+            QtdVendida: 1,
+            Produto: ProdutosEstoque[Produto].Nome,
+            Preco: ProdutosEstoque[Produto].preco,
+            Cliente: input("Gostaria de informar o cliente?"),
+            Data: d
+        });
+        ProdutosEstoque[Produto].QtProduto--;
+        console.log(chalk.green(`✔ ${ProdutosEstoque[Produto].Nome}, VENDIDO `));
+        input("Aperte para continuar...");
+    }
+
+    ApagarTerminal();
+    if (ProdutosEstoque[Produto].QtProduto == 0) {
+        ProdutosEstoque.splice(Produto, 1);
+    }
+    console.log(chalk.blueBright("ATUALIZADO"));
+    ListarEstoqueResumido();
+    input("Aperte para continuar...");
+}
+
+export function CancelarVenda() {
+    console.log(chalk.cyanBright(`          
+${chalk.bold('>> A Oficina Submersa de Elias Grimwald – Sussurros do Relicário de Vapor <<')}
+        ${chalk.gray.italic(GerarFrase())}
+        ${chalk.redBright('CANCELAR VENDA')}
+`));
+
+    ListarVendas();
+
+    if (VendasTotais.length <= 0) {
+        input("Aperte para voltar  ");
+    } else {
+        let venda = Number(input("Qual gostaria de cancelar? "));
+
+        if (venda >= 0 && venda < VendasTotais.length) {
+            let id = VendasTotais[venda].id;
+            ProdutosEstoque[id].QtProduto++;
+            VendasTotais.splice(venda, 1);
+            console.log(chalk.green("✔ Venda cancelada com sucesso."));
+        } else {
+            console.log(chalk.red("Venda não encontrada."));
+        }
+
+        input("Aperte para continuar...");
+    }
+}
+
+export function ListarVendas() {
+    if (VendasTotais.length <= 0) {
+        ApagarTerminal();
+        console.log(chalk.gray("Não foram feitas vendas ainda hoje"));
+    } else {
+        ApagarTerminal();
+        let i = 0;
+        for (let item of VendasTotais) {
+            console.log(chalk.yellow(`[${i}] 🔹 ${item.Produto}`) +
+                chalk.white(` — Quantidade: ${item.QtdVendida}`) +
+                chalk.gray(` >> ${item.Data.toLocaleString()}`) +
+                chalk.gray(` :${item.Cliente} `));
+            i++;
+        }
+    }
+}
 
 export function FinalizarAplicacao() {
     ApagarTerminal();
-    console.log(` 
-            ${chalk.bold.dim(GerarFrase())}
-            OBRIGADO POR USAR A APLICAÇÃO VOLTE SEMPRE
-        `)
-};
+    console.log(chalk.cyanBright(` 
+    ${chalk.gray.italic(GerarFrase())}
+    ${chalk.bold.greenBright('OBRIGADO POR USAR A APLICAÇÃO VOLTE SEMPRE')}
+`));
+}
